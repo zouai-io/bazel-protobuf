@@ -162,15 +162,15 @@ protoc_go = rule(
 
 def _local_repository_impl(repository_ctx):
     if repository_ctx.os.name == "windows":
-        repository_ctx.download("https://gobinaries.com/binary/github.com/golang/protobuf/protoc-gen-go?os=windows&arch=amd64&version=v1.3.3", output = "protoc-gen-go", executable = True)
-        repository_ctx.download("https://gobinaries.com/binary/github.com/twitchtv/twirp/protoc-gen-twirp?os=windows&arch=amd64&version=v5.10.1", output = "protoc-gen-twirp", executable = True)
-        repository_ctx.download("https://gobinaries.com/binary/github.com/apptreesoftware/protoc-gen-twirp_dart?os=windows&arch=amd64&version=4aa481ad603f63fc3236b4f0b1f3b310eaf55a06", output = "protoc-gen-twirp_dart", executable = True)
+        repository_ctx.download("https://gobin.zouai.io/binary/github.com/golang/protobuf/protoc-gen-go?os=windows&arch=amd64&version=v1.3.3", output = "protoc-gen-go", executable = True)
+        repository_ctx.download("https://gobin.zouai.io/binary/github.com/twitchtv/twirp/protoc-gen-twirp?os=windows&arch=amd64&version=v5.10.1", output = "protoc-gen-twirp", executable = True)
+        repository_ctx.download("https://gobin.zouai.io/binary/github.com/apptreesoftware/protoc-gen-twirp_dart?os=windows&arch=amd64&version=4aa481ad603f63fc3236b4f0b1f3b310eaf55a06", output = "protoc-gen-twirp_dart", executable = True)
         repository_ctx.download_and_extract("https://github.com/protocolbuffers/protobuf/releases/download/v3.11.4/protoc-3.11.4-win64.zip", output = "protoczip")
         repository_ctx.symlink("protoczip/bin/protoc.exe", "protoc.exe")
     elif repository_ctx.os.name == "linux":
-        repository_ctx.download("https://gobinaries.com/binary/github.com/golang/protobuf/protoc-gen-go?os=linux&arch=amd64&version=v1.3.3", output = "protoc-gen-go", executable = True)
-        repository_ctx.download("https://gobinaries.com/binary/github.com/twitchtv/twirp/protoc-gen-twirp?os=linux&arch=amd64&version=v5.10.1", output = "protoc-gen-twirp", executable = True)
-        repository_ctx.download("https://gobinaries.com/binary/github.com/apptreesoftware/protoc-gen-twirp_dart?os=linux&arch=amd64&version=4aa481ad603f63fc3236b4f0b1f3b310eaf55a06", output = "protoc-gen-twirp_dart", executable = True)
+        repository_ctx.download("https://gobin.zouai.io/binary/github.com/golang/protobuf/protoc-gen-go?os=linux&arch=amd64&version=v1.3.3", output = "protoc-gen-go", executable = True)
+        repository_ctx.download("https://gobin.zouai.io/binary/github.com/twitchtv/twirp/protoc-gen-twirp?os=linux&arch=amd64&version=v5.10.1", output = "protoc-gen-twirp", executable = True)
+        repository_ctx.download("https://gobin.zouai.io/binary/github.com/apptreesoftware/protoc-gen-twirp_dart?os=linux&arch=amd64&version=4aa481ad603f63fc3236b4f0b1f3b310eaf55a06", output = "protoc-gen-twirp_dart", executable = True)
         repository_ctx.download_and_extract("https://github.com/protocolbuffers/protobuf/releases/download/v3.11.4/protoc-3.11.4-linux-x86_64.zip", output = "protoczip")
         repository_ctx.symlink("protoczip/bin/protoc", "protoc")
     else:
