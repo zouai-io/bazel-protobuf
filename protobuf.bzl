@@ -90,26 +90,6 @@ def _protoc_go_impl(ctx):
             outdir = ctx.file.outdir,
             protoc = ctx.file._protoc,
         )
-        if ctx.attr.twirp:
-            outputs = outputs + _protoc_runner(
-                ctx = ctx,
-                plugin = ctx.file._protoc_gen_twirp,
-                inputfile = ctx.files.file[i],
-                flag = "--twirp_out='paths=source_relative:proto_out'",
-                extension = "twirp.go",
-                outdir = ctx.file.outdir,
-                protoc = ctx.file._protoc,
-            )
-        if ctx.file.dart_outdir:
-            outputs = outputs + _protoc_runner(
-                ctx = ctx,
-                plugin = ctx.file._protoc_gen_twirp_dart,
-                inputfile = ctx.files.file[i],
-                flag = "--twirp_dart_out='proto_out'",
-                extension = "twirp.dart",
-                outdir = ctx.file.dart_outdir,
-                protoc = ctx.file._protoc,
-            )
     gomod = ctx.actions.declare_file(ctx.attr.name + "/go.mod")
     ctx.actions.write(gomod, "module {}".format(ctx.attr.gopackage))
     outputs.append(gomod)
@@ -132,7 +112,6 @@ protoc_go = rule(
         "dart_outdir": attr.label(
             allow_single_file = True,
         ),
-        "twirp": attr.bool(),
         "_protoc_gen_go": attr.label(
             default = Label("@protoc//:protoc-gen-go"),
             executable = True,
@@ -145,37 +124,21 @@ protoc_go = rule(
             allow_single_file = True,
             cfg = "host",
         ),
-        "_protoc_gen_twirp": attr.label(
-            default = Label("@protoc//:protoc-gen-twirp"),
-            executable = True,
-            allow_single_file = True,
-            cfg = "host",
-        ),
-        "_protoc_gen_twirp_dart": attr.label(
-            default = Label("@protoc//:protoc-gen-twirp_dart"),
-            executable = True,
-            allow_single_file = True,
-            cfg = "host",
-        ),
     },
 )
 
 def _local_repository_impl(repository_ctx):
     if repository_ctx.os.name == "windows":
         repository_ctx.download("https://gobin.zouai.io/binary/github.com/golang/protobuf/protoc-gen-go?os=windows&arch=amd64&version=v1.3.3", output = "protoc-gen-go", executable = True)
-        repository_ctx.download("https://gobin.zouai.io/binary/github.com/twitchtv/twirp/protoc-gen-twirp?os=windows&arch=amd64&version=v5.10.1", output = "protoc-gen-twirp", executable = True)
-        repository_ctx.download("https://gobin.zouai.io/binary/github.com/apptreesoftware/protoc-gen-twirp_dart?os=windows&arch=amd64&version=4aa481ad603f63fc3236b4f0b1f3b310eaf55a06", output = "protoc-gen-twirp_dart", executable = True)
         repository_ctx.download_and_extract("https://github.com/protocolbuffers/protobuf/releases/download/v3.11.4/protoc-3.11.4-win64.zip", output = "protoczip")
         repository_ctx.symlink("protoczip/bin/protoc.exe", "protoc.exe")
     elif repository_ctx.os.name == "linux":
         repository_ctx.download("https://gobin.zouai.io/binary/github.com/golang/protobuf/protoc-gen-go?os=linux&arch=amd64&version=v1.3.3", output = "protoc-gen-go", executable = True)
-        repository_ctx.download("https://gobin.zouai.io/binary/github.com/twitchtv/twirp/protoc-gen-twirp?os=linux&arch=amd64&version=v5.10.1", output = "protoc-gen-twirp", executable = True)
-        repository_ctx.download("https://gobin.zouai.io/binary/github.com/apptreesoftware/protoc-gen-twirp_dart?os=linux&arch=amd64&version=4aa481ad603f63fc3236b4f0b1f3b310eaf55a06", output = "protoc-gen-twirp_dart", executable = True)
         repository_ctx.download_and_extract("https://github.com/protocolbuffers/protobuf/releases/download/v3.11.4/protoc-3.11.4-linux-x86_64.zip", output = "protoczip")
         repository_ctx.symlink("protoczip/bin/protoc", "protoc")
     else:
         fail("Unknown Arch '{}'".format(repository_ctx.os.name))
-    repository_ctx.file("BUILD.bazel", 'exports_files(["protoc-gen-go","protoc-gen-twirp","protoc","protoc-gen-twirp_dart"])')
+    repository_ctx.file("BUILD.bazel", 'exports_files(["protoc-gen-go","protoc"])')
 
 protoc_deps = repository_rule(
     implementation = _local_repository_impl,
